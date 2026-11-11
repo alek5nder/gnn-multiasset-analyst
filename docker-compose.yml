@@ -1,0 +1,33 @@
+services:
+  workspace:
+    build:
+      context: .devcontainer
+      dockerfile: Dockerfile
+    container_name: paper_workspace
+    volumes:
+      - ./:/workspace:cached
+      - gemini_state:/root/.gemini          # Trwała sesja OAuth i cache Gemini
+    working_dir: /workspace
+    env_file: .env
+    environment:
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
+      - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}
+    depends_on:
+      - db
+    tty: true
+    stdin_open: true
+
+  db:
+    image: pgvector/pgvector:pg17
+    container_name: paper_postgres
+    restart: unless-stopped
+    env_file: .env
+    ports:
+      - "${POSTGRES_PORT}:5432"             # Port dla DBeavera na hoście (PC / Laptop)
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./db/init:/docker-entrypoint-initdb.d
+
+volumes:
+  pgdata:
+  gemini_state:

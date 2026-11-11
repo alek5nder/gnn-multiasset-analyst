@@ -1,0 +1,9 @@
+model_list:
+  - model_name: claude-sonnet-4-5-20250929 # Alias przechwytywany z Claude Code
+    litellm_params:
+      model: gemini/gemini-4-argon
+      api_key: os.environ/GEMINI_API_KEY
+  - model_name: gemini-4-argon
+    litellm_params:
+      model: gemini/gemini-4-argon
+      api_key: os.environ/GEMINI_API_KEY
