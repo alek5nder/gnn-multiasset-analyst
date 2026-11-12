@@ -4,13 +4,15 @@ services:
       context: .devcontainer
       dockerfile: Dockerfile
     container_name: paper_workspace
+    hostname: paper-workspace
     volumes:
       - ./:/workspace:cached
-      - gemini_state:/root/.gemini          # Trwała sesja OAuth i cache Gemini
+      - gemini_state:/root/.gemini
+      - ssh_keys:/root/.ssh
     working_dir: /workspace
     env_file: .env
     environment:
-      - GEMINI_API_KEY=${GEMINI_API_KEY}
+      - GEMINI_FORCE_ENCRYPTED_FILE_STORAGE=true
       - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}
     depends_on:
       - db
@@ -31,3 +33,4 @@ services:
 volumes:
   pgdata:
   gemini_state:
+  ssh_keys:
